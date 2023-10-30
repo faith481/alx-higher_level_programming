@@ -1,2 +1,2 @@
 #!/bin/bash
-python3 $PYDOCUMENT
+python3 ./$PYDOCUMENT
