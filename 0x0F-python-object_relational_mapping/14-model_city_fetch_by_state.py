@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     query = session.query(State, City).join(City, State.id == City.state_id).\
             order_by(City.id)
-            for state, city in query:
+    for state, city in query:
                 print("{}: ({}) {}".format(state.name, city.id, city.name))
 
                 session.close()
