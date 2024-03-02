@@ -11,11 +11,11 @@ Base = declarative_base()
 
 
 class State(Base):
-        """ State Class inherit from Base declarative_base()
-            links to the MySQL table states
-                Attr:
-                        id, name
-                            """
-                                __tablename__ = 'states'
-                                    id = Column(Integer, autoincrement=True, primary_key=True)
-                                        name = Column(String(128), nullable=False)
+    """ State Class inherit from Base declarative_base()
+    links to the MySQL table states
+    Attr:
+    id, name
+    """
+    __tablename__ = 'states'
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    name = Column(String(128), nullable=False)
