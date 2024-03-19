@@ -2,19 +2,26 @@
 """Script that lists all objects that contain the a letter from the database
 """
 import sys
-from model_state import Base, State
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import (create_engine)
+from model_state import Base, State
 
-if __name__ == "__main__":
-    engine = create_engine('mysql+mysqldb://{}:{}@localhost:3306/{}'.
-            format(sys.argv[1], sys.argv[2], sys.argv[3]),
-            pool_pre_ping=True)
-    Session = sessionmaker(bind=engine)
-    session = Session()
 
-    states = session.query(State).filter(State.name.like(sys.argv[4]))
-    if states.count() != 1 or not states:
-        print("Not found")
-    else:
-        print("{}".format(states.first().id))
+if __name__ == '__main__':
+    if len(sys.argv) >= 5:
+        user = sys.argv[1]
+        passwd = sys.argv[2]
+        dbname = sys.argv[3]
+        stname = sys.argv[4]
+        vchr = map(lambda ch: ch.isalpha() or (ch in (' ', '%', '_')), stname)
+        if not all(vchr):
+            stname = ''
+        dburl = f"mysql://{user}:{passwd}@localhost:3306/{dbname}"
+        dbengine = create_engine(dburl)
+        Base.metadata.create_all(dbengine)
+        dbsession = sessionmaker(bind=dbengine)()
+        qryres = dbsession.query(State).filter(State.name == stname).first()
+        if qryres is None:
+            print("Not found")
+        else:
+            print(f"{qryres.id}")
