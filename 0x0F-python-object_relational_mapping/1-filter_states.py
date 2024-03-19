@@ -9,20 +9,21 @@ import sys
 
 
 if __name__ == '__main__':
-    db = MySQLdb.connect(
-            host='localhost',
-            user=sys.argv[1],
-            passwd=sys.argv[2],
-            db=sys.argv[3],
-            port=3306
-            )
-    cur = db.cursor()
-    cur.execute("SELECT * FROM states WHERE name LIKE BINARY 'N%'\
-            ORDER BY states.id ASC")
-    table = cur.fetchall()
-
-    for row in table:
-        print(row)
-
-        cur.close()
-        db.close()
+    if len(sys.argv) >= 4:
+        dbconn = MySQLdb.connect(
+                host="localhost",
+                port=3306,
+                user=sys.argv[1],
+                passwd=sys.argv[2],
+                db=sys.argv[3]
+        )
+        dbcur = dbconn.cursor()
+        dbqry = (
+            'SELECT * FROM states WHERE name IS NOT NULL AND' +
+            ' LEFT(CAST(name AS BINARY), 1) = "N" ORDER BY states.id ASC;'
+        )
+        dbcur.execute(dbqry)
+        qryres = dbcur.fetchall()
+        for row in qryres:
+            print(row)
+        dbconn.close()
